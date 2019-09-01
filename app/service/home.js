@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const redis = require('redis');
 const { promisify } = require('util');
 const Service = require('egg').Service;
@@ -38,7 +39,7 @@ class HomeService extends Service {
       method: 'POST',
       dataType: 'json',
       headers: {
-        Authorization: 'token 617bfc035eb8df3ed9656a887eeba2f0020751df',
+        Authorization: `token ${process.env.TOKEN}`,
       },
       data: JSON.stringify({ query }),
       timeout: 10000,

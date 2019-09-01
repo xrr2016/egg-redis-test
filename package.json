@@ -7,6 +7,7 @@
     "declarations": true
   },
   "dependencies": {
+    "dotenv": "^8.1.0",
     "egg": "^2.15.1",
     "egg-scripts": "^2.11.0",
     "redis": "^2.8.0"
