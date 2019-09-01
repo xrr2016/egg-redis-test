@@ -12,12 +12,11 @@ const setAsync = promisify(client.setnx).bind(client);
 class HomeService extends Service {
   async stars(owner = 'vuejs', name = 'vue') {
     const key = `${owner}/${name}`;
+    const stars = await getAsync(key);
 
     function setResponse(name, stars) {
-      return `<p><strong>${name}</strong> has ${stars} stars.</p>`;
+      return `${name} has ${stars} stars.`;
     }
-
-    const stars = await getAsync(key);
 
     // 有数据使用缓存
     if (stars !== null) {
@@ -26,14 +25,14 @@ class HomeService extends Service {
 
     // 没有数据发送请求
     const query = `
-        query {
-          repository(owner: ${owner}, name: ${name}) {
-            stargazers {
-              totalCount
-            }
+      query {
+        repository(owner: ${owner}, name: ${name}) {
+          stargazers {
+            totalCount
           }
         }
-      `;
+      }
+    `;
 
     const result = await this.ctx.curl('https://api.github.com/graphql', {
       method: 'POST',
@@ -46,8 +45,9 @@ class HomeService extends Service {
     });
 
     const data = result.data.data;
-    await setAsync(key, data.repository.stargazers.totalCount); // 将数据写入 redis
 
+    // 将返回的数据写入 redis
+    await setAsync(key, data.repository.stargazers.totalCount);
     return setResponse(name, data.repository.stargazers.totalCount);
   }
 }
