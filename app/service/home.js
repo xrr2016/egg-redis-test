@@ -39,9 +39,9 @@ class HomeService extends Service {
       method: 'POST',
       dataType: 'json',
       headers: {
-        Authorization: `token ${process.env.TOKEN}`,
+        Authorization: `token ${process.env.TOKEN}`, // 从环境变量中拿到 token
       },
-      data: JSON.stringify({ query }),
+      data: JSON.stringify({ query }), // post 请求的数据要用 JSON.stringify 方法传给 Github 接口，否则出现解析错误
       timeout: 10000,
     });
 
