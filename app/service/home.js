@@ -16,7 +16,7 @@ class HomeService extends Service {
     const stars = await getAsync(key);
 
     function setResponse(name, stars) {
-      return `${name} has ${stars} stars.`;
+      return { msg: `${name} has ${stars} stars.` };
     }
 
     // 有数据使用缓存
