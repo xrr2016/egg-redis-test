@@ -11,7 +11,7 @@ const getAsync = promisify(client.get).bind(client);
 const setexAsync = promisify(client.setex).bind(client);
 
 class HomeService extends Service {
-  async stars(owner = 'vuejs', name = 'vue') {
+  async stars(owner, name) {
     const key = `${owner}/${name}`;
     const stars = await getAsync(key);
 
