@@ -8,7 +8,7 @@ const Service = require('egg').Service;
 const REDIS_PORT = process.env.PORT || 6379;
 const client = redis.createClient(REDIS_PORT);
 const getAsync = promisify(client.get).bind(client);
-const setAsync = promisify(client.setnx).bind(client);
+const setexAsync = promisify(client.setex).bind(client);
 
 class HomeService extends Service {
   async stars(owner = 'vuejs', name = 'vue') {
@@ -47,8 +47,8 @@ class HomeService extends Service {
 
     const data = result.data.data;
 
-    // 将返回的数据写入 redis
-    await setAsync(key, data.repository.stargazers.totalCount);
+    // 将返回的数据写入 redis，10 秒后过期
+    await setexAsync(key, 10, data.repository.stargazers.totalCount);
     return setResponse(name, data.repository.stargazers.totalCount);
   }
 }
